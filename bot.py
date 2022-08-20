@@ -12,7 +12,7 @@ from func.get_holiday import get_holiday
 from func.get_anime import get_anime
 
 
-bot = telebot.TeleBot(BOT_TOKEN, parse_mode=None)
+bot = telebot.TeleBot(BOT_TOKEN)
 server = Flask(__name__)
 
 

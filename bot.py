@@ -1,15 +1,15 @@
 from messages import *
 from config import *
 from keyboards import *
-from flask import Flask, request
-import random, os, telebot
-
 from func.get_song import get_song, get_lyrics, get_song_by_id
 from func.get_weather import get_weather
 from func.get_joke import get_joke
 from func.crypto import encrypt, decrypt
 from func.get_holiday import get_holiday
 from func.get_anime import get_anime
+
+from flask import Flask, request
+import random, os, telebot
 
 
 bot = telebot.TeleBot(BOT_TOKEN)

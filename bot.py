@@ -43,7 +43,7 @@ def other_functions(message):
 @bot.message_handler(commands=['weather'])
 def weather(message):
     """ Weather command """
-    msg = bot.send_message(message.chat.id, 'Секунду...')
+    msg = bot.send_message(message.chat.id, WAIT_MESSAGE)
     try:
         result = get_weather(message.text)
         bot.edit_message_text(                             
@@ -67,13 +67,14 @@ def _song(message):
     global current_song
     """ Creates a Song object and sends a message with information about the song to the user """
     try:
+        msg = bot.send_message(message.chat.id, WAIT_MESSAGE)
         text = message.text
         current_song = get_song(text)
         print(current_song.other_songs)
-        bot.send_message(message.chat.id, current_song.text, reply_markup=song_markup())
+        bot.edit_message_text(current_song.text, msg.chat.id, msg.message_id, reply_markup=song_markup())
     except Exception:
         print(Exception)
-        bot.send_message(message.chat.id, ERROR_MESSAGE)
+        bot.edit_message_text(ERROR_MESSAGE, msg.chat.id, msg.message_id)
 
 
 # Cryptographer
@@ -91,7 +92,7 @@ def _encr(message):
     markup = crypto_markup()
     result = encrypt(message.text)
     bot.send_message(message.chat.id, f'>>> Ваше сообщение (_Нажми_):\n\n`{result}`', parse_mode='Markdown')
-    bot.send_message(message.chat.id, 'Что-нибудь ещё? 😉', reply_markup=markup)
+    bot.send_message(message.chat.id, NEXT_ACTION_MESSAGE, reply_markup=markup)
 
 
 def _decr(message):
@@ -102,7 +103,7 @@ def _decr(message):
     try:
         result = decrypt(message.text)
         bot.send_message(message.chat.id, f'>>> Вам написали:\n{result}')
-        bot.send_message(message.chat.id, 'Что-нибудь ещё? 😉', reply_markup=crypto_markup())
+        bot.send_message(message.chat.id, NEXT_ACTION_MESSAGE, reply_markup=crypto_markup())
     except ValueError:
         bot.send_message(message.chat.id, ERROR_MESSAGE)
 
@@ -118,15 +119,16 @@ def anime(message):
 def _get_anime_link(message):
     """ Get anime data by title"""
     text = message.text
+    msg = bot.send_message(message.chat.id, WAIT_MESSAGE)
     result = get_anime(text)
-    bot.send_message(message.chat.id, result, parse_mode='Markdown')
+    bot.edit_message_text(result, msg.chat.id, msg.message_id, parse_mode='Markdown')
 
 
 # Анекдот
 @bot.message_handler(commands=['joke'])
 def joke(message):
     """ Get random joke """
-    msg = bot.send_message(message.chat.id, 'Секунду...') 
+    msg = bot.send_message(message.chat.id, WAIT_MESSAGE) 
     result = get_joke()
     bot.edit_message_text(result, msg.chat.id, msg.message_id)
 
@@ -134,7 +136,7 @@ def joke(message):
 @bot.message_handler(commands=['holiday'])
 def holiday(message):
     """ Get today's holiday """
-    msg = bot.send_message(message.chat.id, 'Секунду...')
+    msg = bot.send_message(message.chat.id, WAIT_MESSAGE)
     result = get_holiday()
     bot.edit_message_text(result, message.chat.id, msg.message_id)
 
@@ -161,7 +163,7 @@ def math(message):
 # Links
 @bot.message_handler(commands=['github', 'git'])
 def git_link(message):
-    bot.send_message(message.chat.id, 'https://github.com/IWDNO/Crypto_bot.git')
+    bot.send_message(message.chat.id, GIT_LINK)
 
 #-----------------------------------------------------------------------------------------------------------
 # Feedback
@@ -175,7 +177,7 @@ def get_feedback(message):
 def _send_feedback(message, name, username):
     # Выход
     if message.text == '/back':
-        bot.send_message(message.chat.id, 'Что дальше?')
+        bot.send_message(message.chat.id, NEXT_ACTION_MESSAGE)
         return None
     # Отправка
     comment = message.text
@@ -186,12 +188,12 @@ def _send_feedback(message, name, username):
 # Обработчик текста
 @bot.message_handler(content_types='text')
 def main(message):
-    if message.text.lower() in ['привет', 'хай', 'ку', 'hi', 'hello']:
-        bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAIcbGLKxNeMYAdcVbWFbC5R2M7cOAoBAAIFAAPANk8T-WpfmoJrTXUpBA')
+    if message.text.lower() in HELLO_MESSAGES_TO_REPLY:
+        bot.send_sticker(message.chat.id, HELLO_STICKER)
+    if message.text.lower() in BYE_MESSAGES_TO_REPLY:
+        bot.send_sticker(message.chat.id, BYE_STICKER)
     if message.text.lower() == 'да':
         bot.reply_to(message, 'Пизда')
-    if message.text.lower() in ['пока', 'спокойной ночи']:
-        bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAIcYmLKw8BxFuVVPxT7vl1hDThmzBfuAAILAAOuNp0y11yfBnx4SLkpBA')
 
 #-----------------------------------------------------------------------------------------------------------
 # inline keyboard обработчик
@@ -203,15 +205,15 @@ def weather_callback(call):
     if call.data == 'encrypt':
         msg = bot.edit_message_text(
             chat_id=call.message.chat.id, message_id=call.message.message_id,
-            text='Введите сообщение для шифровки:\n\n _назад -> /back_',
+            text=ENCRYPT_MESSAGE,
             reply_markup=None, parse_mode='Markdown'
         )
         bot.register_next_step_handler(msg, _encr)
-
+        
     if call.data == 'decrypt':
         msg = bot.edit_message_text(
             chat_id=call.message.chat.id, message_id=call.message.message_id,
-            text='Введите сообщение для Расшифровки:\n\n _назад -> /back_', 
+            text=DECRYPT_MESSAGE, 
             reply_markup=None, parse_mode='Markdown' 
         )
         bot.register_next_step_handler(msg, _decr)     
@@ -223,7 +225,7 @@ def weather_callback(call):
         bot.register_next_step_handler(msg, weather)
 
 
-    """ Song lyrics """
+    """ Songs """
     if call.data == 'show_lyrics':
         result = get_lyrics(current_song.song_id)
         bot.send_message(call.message.chat.id, result, reply_markup=find_song_markup())
@@ -264,11 +266,11 @@ def get_message():
     return '!', 200
 
 
-# @server.route("/")
-# def webhook():
-#     bot.remove_webhook()
-#     bot.set_webhook(url='https://your_heroku_project.com/' + BOT_TOKEN)
-#     return "!", 200
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url='https://your_heroku_project.com/' + BOT_TOKEN)
+    return "!", 200
 
 
 if __name__ == '__main__':

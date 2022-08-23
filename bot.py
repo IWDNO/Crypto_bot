@@ -221,7 +221,7 @@ def weather_callback(call):
     """ Anime """
     if call.data  == 'recent_anime':
         bot.clear_step_handler_by_chat_id(call.message.chat.id)
-        bot.send_message(call.message.chat.id, new_anime(), reply_markup=find_anime_markup())
+        bot.edit_message_text(new_anime(), call.message.chat.id, call.message.message_id, reply_markup=find_anime_markup())
         
     if call.data == 'find_anime':
         anime(call.message)

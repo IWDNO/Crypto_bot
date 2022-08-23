@@ -15,6 +15,13 @@ def crypto_markup():
     markup.add(button1, button2)
     return markup
 
+
+def anime_markup():
+    markup = types.InlineKeyboardMarkup()
+    button = types.InlineKeyboardButton('Аниме, вышедшие недавно', callback_data='recent_anime')
+    markup.add(button)
+    return markup
+
 #--------------------------------------------------------------------------------------------------#
 
 def song_markup():

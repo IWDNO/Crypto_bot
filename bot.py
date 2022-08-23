@@ -6,7 +6,7 @@ from func.get_weather import get_weather
 from func.get_joke import get_joke
 from func.crypto import encrypt, decrypt
 from func.get_holiday import get_holiday
-from func.get_anime import get_anime
+from func.get_anime import get_anime, new_anime
 
 from flask import Flask, request
 import random, os, telebot
@@ -112,7 +112,7 @@ def _decr(message):
 @bot.message_handler(commands=['anime'])
 def anime(message):
     """ Requests anime title"""
-    msg = bot.send_message(message.chat.id, 'Введите название аниме:')
+    msg = bot.send_message(message.chat.id, 'Введите название аниме:', reply_markup=anime_markup())
     bot.register_next_step_handler(msg, _get_anime_link)
 
 
@@ -217,6 +217,11 @@ def weather_callback(call):
             reply_markup=None, parse_mode='Markdown' 
         )
         bot.register_next_step_handler(msg, _decr)     
+
+
+    """ Anime """
+    if call.data  == 'recent_anime':
+        bot.send_message(call.message.chat.id, new_anime())
 
 
     """ Weather """

@@ -2,6 +2,7 @@ from telebot import types
 
 
 def weather_markup():
+    """ Buttons: `Другой город` """
     markup = types.InlineKeyboardMarkup()
     button = types.InlineKeyboardButton('Другой город', callback_data='Other_city')
     markup.add(button)
@@ -9,6 +10,7 @@ def weather_markup():
     
     
 def crypto_markup():
+    """ Buttons: `Шифровка` / `Расшифровка` """
     markup = types.InlineKeyboardMarkup()
     button1 = types.InlineKeyboardButton('Шифровка', callback_data='encrypt')
     button2 = types.InlineKeyboardButton('Расшифровка', callback_data='decrypt')
@@ -16,15 +18,24 @@ def crypto_markup():
     return markup
 
 
-def anime_markup():
+def recent_anime_markup():
+    """ Buttons: `Аниме, вышедшие недавно` """
     markup = types.InlineKeyboardMarkup()
     button = types.InlineKeyboardButton('Аниме, вышедшие недавно', callback_data='recent_anime')
+    markup.add(button)
+    return markup
+
+def find_anime_markup():
+    """ Buttons: `Найти аниме` """
+    markup = types.InlineKeyboardMarkup()
+    button = types.InlineKeyboardButton('Найти аниме', callback_data='find_anime')
     markup.add(button)
     return markup
 
 #--------------------------------------------------------------------------------------------------#
 
 def song_markup():
+    """ Buttons: `Показать текст` / `⬅️ Найти другую песню` / `Другие результаты` / `Получить ссылки` """
     markup = types.InlineKeyboardMarkup()
     button1 = types.InlineKeyboardButton('Показать текст', callback_data='show_lyrics')
     button2 = types.InlineKeyboardButton('⬅️ Найти другую песню', callback_data='another_song')
@@ -37,6 +48,7 @@ def song_markup():
 
 
 def other_songs_markup(songs):
+    """ Other songs search results in Inline keyboard + `⬅️ Найти другую песню` """
     # songs: [ [song name, artist, id], [...] ]
     markup = types.InlineKeyboardMarkup()
     for i in range(len(songs)):
@@ -51,6 +63,7 @@ def other_songs_markup(songs):
 
 
 def find_song_markup():
+    """ Buttons: `Найти другую песню` """
     markup = types.InlineKeyboardMarkup()
     button = types.InlineKeyboardButton('Найти другую песню', callback_data='another_song')
     markup.add(button)

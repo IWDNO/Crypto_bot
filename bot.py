@@ -59,7 +59,7 @@ def weather(message):
 @bot.message_handler(commands=['song'])
 def song(message):
     """ Song command (requests song title). Passed to `_song` function"""
-    msg = bot.send_message(message.chat.id, '🎵 Введите название песни / текст:')
+    msg = bot.send_message(message.chat.id, SONG_SEARCH_MESSAGE)
     bot.register_next_step_handler(msg, _song)
 
 
@@ -89,10 +89,9 @@ def _encr(message):
     if message.text == '/back':
         cryptographer(message)
         return None
-    markup = crypto_markup()
     result = encrypt(message.text)
     bot.send_message(message.chat.id, f'>>> Ваше сообщение (_Нажми_):\n\n`{result}`', parse_mode='Markdown')
-    bot.send_message(message.chat.id, NEXT_ACTION_MESSAGE, reply_markup=markup)
+    bot.send_message(message.chat.id, NEXT_ACTION_MESSAGE, reply_markup=crypto_markup())
 
 
 def _decr(message):
@@ -112,7 +111,7 @@ def _decr(message):
 @bot.message_handler(commands=['anime'])
 def anime(message):
     """ Requests anime title"""
-    msg = bot.send_message(message.chat.id, 'Введите название аниме:', reply_markup=anime_markup())
+    msg = bot.send_message(message.chat.id, ANIME_SEARCH_MESSAGE, reply_markup=recent_anime_markup())
     bot.register_next_step_handler(msg, _get_anime_link)
 
 
@@ -171,7 +170,7 @@ def git_link(message):
 def get_feedback(message):
     name = message.from_user.first_name
     username = message.from_user.username
-    msg = bot.send_message(message.chat.id, 'Напишите Ваш отзыв:\n\n_Отмена -> /back_', parse_mode='Markdown')
+    msg = bot.send_message(message.chat.id, SEND_FEEDBACK_MESSAGE, parse_mode='Markdown')
     bot.register_next_step_handler(msg, _send_feedback, name, username)
     
 def _send_feedback(message, name, username):
@@ -182,7 +181,7 @@ def _send_feedback(message, name, username):
     # Отправка
     comment = message.text
     bot.send_message(chat_id=744684673, text=f'Отзыв от {name} (@{username}):\n{comment}')
-    bot.send_message(message.chat.id, 'Ваш отзыв отправлен :)')
+    bot.send_message(message.chat.id, FEEDBACK_SUCCESS_MESSAGE)
 
 #-----------------------------------------------------------------------------------------------------------
 # Обработчик текста
@@ -222,7 +221,7 @@ def weather_callback(call):
     """ Anime """
     if call.data  == 'recent_anime':
         bot.clear_step_handler_by_chat_id(call.message.chat.id)
-        bot.send_message(call.message.chat.id, new_anime())
+        bot.send_message(call.message.chat.id, new_anime(), reply_markup=find_anime_markup())
 
 
     """ Weather """

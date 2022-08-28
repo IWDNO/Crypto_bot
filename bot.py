@@ -261,7 +261,7 @@ def get_message():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://cryptobot139.herokuapp.com/' + BOT_TOKEN)
+    bot.set_webhook(url=APP_URL)
     return "!", 200
 
 

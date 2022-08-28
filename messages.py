@@ -25,3 +25,5 @@ ANIME_SEARCH_MESSAGE = 'Введите название аниме:'
 
 SEND_FEEDBACK_MESSAGE = 'Напишите Ваш отзыв:\n\n_Отмена -> /back_'
 FEEDBACK_SUCCESS_MESSAGE = 'Ваш отзыв отправлен :)'
+
+WEATHER_CHOOSE_CITY_MESSAGE = 'Введите город: '

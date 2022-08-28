@@ -139,18 +139,6 @@ def holiday(message):
     result = get_holiday()
     bot.edit_message_text(result, message.chat.id, msg.message_id)
 
-# Yes/No
-@bot.message_handler(commands=['?', 'coin'])
-def coin_flip(message):
-    result = ('Yes', 'No')[random.randint(0,1)]
-    bot.reply_to(message, result)
-
-# Twerk
-@bot.message_handler(commands=['twerk'])
-def twerk(message):
-    sticker = TWERK_STICKERS[0] if random.random() < 0.10 else TWERK_STICKERS[1]
-    bot.send_animation(message.chat.id, sticker)
-
 # Calculator
 @bot.message_handler(regexp=r'\d+\s*[/*+-]\s*\d+')
 def math(message):
@@ -168,17 +156,15 @@ def git_link(message):
 # Feedback
 @bot.message_handler(commands=['feedback'])
 def get_feedback(message):
-    name = message.from_user.first_name
-    username = message.from_user.username
     msg = bot.send_message(message.chat.id, SEND_FEEDBACK_MESSAGE, parse_mode='Markdown')
-    bot.register_next_step_handler(msg, _send_feedback, name, username)
+    bot.register_next_step_handler(msg, _send_feedback)
     
-def _send_feedback(message, name, username):
-    # Выход
+def _send_feedback(message):
     if message.text == '/back':
         bot.send_message(message.chat.id, NEXT_ACTION_MESSAGE)
         return None
-    # Отправка
+    name = message.from_user.first_name
+    username = message.from_user.username
     comment = message.text
     bot.send_message(chat_id=744684673, text=f'Отзыв от {name} (@{username}):\n{comment}')
     bot.send_message(message.chat.id, FEEDBACK_SUCCESS_MESSAGE)
@@ -197,7 +183,7 @@ def main(message):
 #-----------------------------------------------------------------------------------------------------------
 # inline keyboard обработчик
 @bot.callback_query_handler(func=lambda call: True)
-def weather_callback(call):
+def callback(call):
     global current_song
     
     """ Cryptogarpher """
@@ -226,9 +212,10 @@ def weather_callback(call):
     if call.data == 'find_anime':
         anime(call.message)
 
+
     """ Weather """
     if call.data == 'Other_city':
-        msg = bot.send_message(call.message.chat.id, 'Введите город: ')
+        msg = bot.edit_message_text(WEATHER_CHOOSE_CITY_MESSAGE, call.message.chat.id, call.message.message_id)
         bot.register_next_step_handler(msg, weather)
 
 
@@ -241,7 +228,6 @@ def weather_callback(call):
         song(call.message)
         
     if call.data == 'other_results':
-        """ message with other results in inline keyboard"""
         songs = current_song.other_songs
         bot.edit_message_text(
             chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -256,7 +242,6 @@ def weather_callback(call):
     if call.data.startswith('song'):
         # call.data: 'song/{id}'
         song_id = call.data.split('/')[1]
-        
         current_song = get_song_by_id(song_id, current_song.other_songs)
         bot.edit_message_text(
             chat_id=call.message.chat.id, message_id=call.message.message_id,
@@ -276,7 +261,7 @@ def get_message():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url='https://your_heroku_project.com/' + BOT_TOKEN)
+    bot.set_webhook(url='https://cryptobot139.herokuapp.com/' + BOT_TOKEN)
     return "!", 200
 
 

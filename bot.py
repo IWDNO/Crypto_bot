@@ -120,7 +120,7 @@ def _get_anime_link(message):
     text = message.text
     msg = bot.send_message(message.chat.id, WAIT_MESSAGE)
     result = get_anime(text)
-    bot.edit_message_text(result, msg.chat.id, msg.message_id, parse_mode='Markdown')
+    bot.edit_message_text(result, msg.chat.id, msg.message_id, reply_markup=find_anime_markup(), parse_mode='Markdown')
 
 
 # Анекдот

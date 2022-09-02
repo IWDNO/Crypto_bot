@@ -11,8 +11,6 @@
 d = list('╸╷┯╴┻┨├╵╾┵┢┫┥┬┧╿╻╶┳╽┰┲┱╺┣┤┹┝┮┺┴╼╹┸┦┭')
 number_system = '0123456789abcdefghijklmnopqrstuvwxyz'
 splitter = '┪'
-# d = '✢✣✤✥✦✧✩✪✫✬✭✮✯✰✱✲✵✶✷✸✹✺✻✼✽✾✿❀❁❂❃❅❆❇❈❉❊'
-# splitter = '✠'
 
 
 def encrypt(text_to_encrypt: str) -> str:
@@ -59,3 +57,4 @@ if __name__ == '__main__':
 — Для чего женщине нужен пупок?
 — Для того, чтобы мужчина по пути вниз мог оставить там свою жвачку.'''))
     print(decrypt(a))
+    

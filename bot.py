@@ -52,7 +52,7 @@ def weather(message):
             parse_mode="Markdown"
     )
     except Exception:                                         
-        bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=ERROR_MESSAGE)
+        bot.edit_message_text(chat_id=message.chat.id, message_id=msg.message_id, text=ERROR_MESSAGE, reply_markup=weather_markup())
         
 
 # Songs

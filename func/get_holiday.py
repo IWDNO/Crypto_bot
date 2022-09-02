@@ -13,3 +13,4 @@ def get_holiday() -> str:
     date = date_block[0].find('a').text
 
     return f'{date}:\n{result}'
+    

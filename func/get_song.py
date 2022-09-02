@@ -125,3 +125,4 @@ def _format_ru_text(title: str, artist: str) -> list[str]:
 
 if __name__ == '__main__':
     print(_get_song_links(5049949))
+    
